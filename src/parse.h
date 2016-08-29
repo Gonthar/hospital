@@ -8,14 +8,14 @@
 #define MAX_LINE_SIZE 100000
 #define NUM_OF_VALID_COMMANDS 5
 
-enum CommandType{
+typedef enum CommandType{
     NEW_DISEASE_ENTER_DESCRIPTION,
     NEW_DISEASE_COPY_DESCRIPTION,
     CHANGE_DESCRIPTION,
     PRINT_DESCRIPTION,
     DELETE_PATIENT_DATA,
     INVALID_COMMAND
-};
+}CommandType;
 
 typedef struct Command{
     enum CommandType type;
@@ -23,5 +23,7 @@ typedef struct Command{
     char arg2[MAX_LINE_SIZE];
     char arg3[MAX_LINE_SIZE];
 }Command;
+
+Command * fetchCommand();
 
 #endif //HOSPITAL_PARSE_H
