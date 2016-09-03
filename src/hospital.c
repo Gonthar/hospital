@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "parse.h"
 #include "structure.h"
 #include "messages.h"
@@ -20,6 +21,16 @@ static const char * types[] = {
 };
 
 int main(int argc, char *argv[]){
+    bool v = false;
+
+    if(argc > 1){
+        if(strcmp(argv[1], "-v") == 0){
+            v = true;
+        }else{
+            wrongArgument();
+            return 1;
+        }
+    }
 
     DiseaseList * dlist = initialiseDiseaseList();
     PatientList * plist = initialisePatientList();
@@ -44,7 +55,7 @@ int main(int argc, char *argv[]){
                 break;
             }
             case DELETE_PATIENT_DATA: {
-                deletePatientData(command->arg1, plist);
+                deletePatientData(command->arg1, plist, dlist);
                 break;
             }
             case INVALID_COMMAND: {
@@ -55,16 +66,14 @@ int main(int argc, char *argv[]){
                 assert(NULL);
             }
         }
-        free(command);
-        if(argc > 0){
-            if(strcmp(argv[0], "-v") == 0){
-                fprintf(stderr, "DESCRIPTIONS: %d", dlist->size);
-            }
+
+        if(v){
+            fprintf(stderr, "DESCRIPTIONS: %d\n", dlist->size);
         }
-        //printf("COMMAND %s ARG2: %s ARG3(if appl): %s\n", command->arg1, command->arg2, command->arg3);
+        free(command);
         command = fetchCommand();
     }
-    freePatientList(plist);
+    freePatientList(plist, dlist);
     freeDiseaseList(dlist);
     return 0;
 };

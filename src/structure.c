@@ -43,27 +43,48 @@ void freeDiseaseList(DiseaseList * list){
     free(list);
 }
 
-void freePatientHistory(Patient * patient){
+void updateRefCounter(Disease * disease, DiseaseList * list){
+    disease->reference_counter--;
+    if(disease->reference_counter == 0){
+        disease->prev->next = disease->next;
+        if(disease->next != NULL){
+            disease->next->prev = disease->prev;
+        }
+        if(list->last->value != NULL) {
+            if (strcmp(list->last->value, disease->value) == 0) {
+                list->last = list->last->prev;
+            }
+        }
+        free(disease->value);
+        free(disease);
+        (list->size)--;
+    }
+}
+
+void freePatientHistory(Patient * patient, DiseaseList * dlist){
     PatientHistory * history = patient->history;
     PatientHistory * tbdeleted;
     while(history != NULL){
+        if(history->disease != NULL){
+            updateRefCounter(history->disease, dlist);
+        }
         tbdeleted = history;
         history = history->prev;
         free(tbdeleted);
     }
 }
 
-void freePatientList(PatientList * list){
-    Patient * patient = list->last;
-    while(list->last->prev != NULL){
-        patient = list->last;
-        list->last = list->last->prev;
-        freePatientHistory(patient);
+void freePatientList(PatientList * plist, DiseaseList * dlist){
+    Patient * patient = plist->last;
+    while(plist->last->prev != NULL){
+        patient = plist->last;
+        plist->last = plist->last->prev;
+        freePatientHistory(patient, dlist);
         free(patient->name);
         free(patient);
     }
-    free(list->last); //dummy
-    free(list);
+    free(plist->last); //dummy
+    free(plist);
 }
 
 Disease * addNewDisease(DiseaseList * list, char* description){
@@ -133,24 +154,6 @@ void addDiseaseToHistory(Patient * patient, Disease * disease){
     disease->reference_counter++;
 }
 
-void updateRefCounter(Disease * disease){
-    disease->reference_counter--;
-    if(disease->reference_counter == 0){
-        disease->prev->next = disease->next;
-        if(disease->next != NULL){
-            disease->next->prev = disease->prev;
-        }
-        free(disease->value);
-        free(disease);
-    }
-}
-
-void deletePatientHistory(Patient * patient, PatientHistory * history){
-    patient->disease_count--;
-    updateRefCounter(history->disease);
-    free(history);
-}
-
 void newDiseaseEnterDescription(char* name, char* disease_description, DiseaseList * dlist, PatientList * plist){
     Disease* disease = addNewDisease(dlist, disease_description);
     Patient* patient = findPatient(plist, name);
@@ -189,7 +192,7 @@ void changeDescription(char* name, char* n, char* disease_description, DiseaseLi
         }
         Disease* new_disease = addNewDisease(dlist, disease_description);
         new_disease->reference_counter++;
-        updateRefCounter(history->disease);
+        updateRefCounter(history->disease, dlist);
         history->disease = new_disease;
     }
     ok();
@@ -209,12 +212,12 @@ void printDescription(char* name, char* n, PatientList * plist){
     }
 }
 
-void deletePatientData(char* name, PatientList * plist){
+void deletePatientData(char* name, PatientList * plist, DiseaseList * dlist){
     Patient * patient = findPatient(plist, name);
     if(patient == NULL) {
         printError(); return;
     }else{
-        freePatientHistory(patient);
+        freePatientHistory(patient, dlist);
         patient->history = NULL;
         patient->disease_count = 0;
     }

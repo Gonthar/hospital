@@ -9,7 +9,7 @@ PARAMETERS=
 OK=$'\e[32;01m [OK]\e[0m'
 WRONG=$'\e[31;01m [WRONG]\e[0m'
 
-ILLEGAL_ARGUMENTS="Usage: ./test.sh [-v (optional]) [prog] [tests directory]"
+ILLEGAL_ARGUMENTS="Usage: ./test.sh [-v (optional)] [prog] [tests directory]"
 EXECUTABLE_DOESNT_EXIST="Executable file does not exist"
 TESTS_DOESNT_EXIST="Test directory does not exist"
 
@@ -59,7 +59,7 @@ for file in $DIRECTORY/test*.in; do
 	            echo " ...referenced string $OK"
                 PASSED=$(($PASSED+1))
             else
-                echo " ...but refrenced string $WRONG"
+                echo " ...but referenced string $WRONG"
             fi
 
             echo ""

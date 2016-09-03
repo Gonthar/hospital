@@ -9,4 +9,6 @@ void printError();
 
 void ok();
 
+void wrongArgument();
+
 #endif //HOSPITAL_MESSAGES_H

@@ -43,7 +43,7 @@ PatientList * initialisePatientList();
 
 void freeDiseaseList(DiseaseList * list);
 
-void freePatientList(PatientList * list);
+void freePatientList(PatientList * plist, DiseaseList * dlist);
 
 void newDiseaseEnterDescription(char* name, char* disease_description, DiseaseList * dlist, PatientList * plist);
 
@@ -53,6 +53,6 @@ void changeDescription(char* name, char* n, char* disease_description, DiseaseLi
 
 void printDescription(char* name, char* n, PatientList * plist);
 
-void deletePatientData(char* name, PatientList * plist);
+void deletePatientData(char* name, PatientList * plist, DiseaseList * dlist);
 
 #endif //HOSPITAL_STRUCTURE_H

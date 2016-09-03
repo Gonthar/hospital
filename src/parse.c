@@ -51,8 +51,6 @@ char * readLine(){
         }
     }
     *line = '\0';
-
-    //printf("%s", line_old);
     return line_old;
 }
 

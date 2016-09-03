@@ -13,3 +13,7 @@ void printError(){
 void ok(){
     printf("OK\n");
 }
+
+void wrongArgument(){
+    printf("ERROR\n");
+}
