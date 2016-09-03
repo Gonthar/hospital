@@ -17,27 +17,6 @@ static const char * types[] = {
         "DELETE_PATIENT_DATA",
         "INVALID_COMMAND"
 };
-char * readLine2(){
-    size_t length = 0;
-    size_t bufferSize = MAX_LINE_SIZE + 2;
-    char * buffer = malloc(sizeof(char) * bufferSize);
-
-    int c;
-
-    while (EOF != (c = fgetc(stdin)) && c != '\n') {
-        if (length == bufferSize) {
-            continue;
-        }
-        buffer[length++] = (char)c;
-    }
-    if(c == EOF){
-        return NULL;
-    }
-
-    buffer[length++] = '\0';
-    return (char *) realloc(buffer, sizeof(char) * length);
-}
-
 
 char * readLine(){
     char * line = malloc(100 * sizeof(char));
@@ -73,8 +52,7 @@ char * readLine(){
     }
     *line = '\0';
 
-    printf("%s", line_old);
-    //free(line);
+    //printf("%s", line_old);
     return line_old;
 }
 

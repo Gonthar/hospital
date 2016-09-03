@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
                 break;
             }
             case DELETE_PATIENT_DATA: {
-                //deletePatientData(command->arg1, plist);
+                deletePatientData(command->arg1, plist);
                 break;
             }
             case INVALID_COMMAND: {

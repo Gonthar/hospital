@@ -5,7 +5,7 @@
 #ifndef HOSPITAL_PARSE_H
 #define HOSPITAL_PARSE_H
 
-#define MAX_LINE_SIZE 1000
+#define MAX_LINE_SIZE 10000
 #define NUM_OF_VALID_COMMANDS 5
 
 typedef enum CommandType{
