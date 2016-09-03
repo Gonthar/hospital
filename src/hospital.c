@@ -32,15 +32,15 @@ int main(int argc, char *argv[]){
                 break;
             }
             case NEW_DISEASE_COPY_DESCRIPTION: {
-                //newDiseaseCopyDescription(command->arg1, command->arg2, plist);
+                newDiseaseCopyDescription(command->arg1, command->arg2, plist);
                 break;
             }
             case CHANGE_DESCRIPTION: {
-                //changeDescription(command->arg1, command->arg2, command->arg3, dlist, plist);
+                changeDescription(command->arg1, command->arg2, command->arg3, dlist, plist);
                 break;
             }
             case PRINT_DESCRIPTION: {
-                //printDescription(command->arg1, command->arg2, plist);
+                printDescription(command->arg1, command->arg2, plist);
                 break;
             }
             case DELETE_PATIENT_DATA: {

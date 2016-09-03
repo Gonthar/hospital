@@ -140,6 +140,7 @@ void updateRefCounter(Disease * disease){
         if(disease->next != NULL){
             disease->next->prev = disease->prev;
         }
+        free(disease->value);
         free(disease);
     }
 }
@@ -195,7 +196,7 @@ void changeDescription(char* name, char* n, char* disease_description, DiseaseLi
 }
 
 void printDescription(char* name, char* n, PatientList * plist){
-    Patient* patient = findPatient(plist, name);
+    Patient * patient = findPatient(plist, name);
     if(patient == NULL) {
         printError(); return;
     }else{
@@ -209,7 +210,7 @@ void printDescription(char* name, char* n, PatientList * plist){
 }
 
 void deletePatientData(char* name, PatientList * plist){
-    Patient* patient = findPatient(plist, name);
+    Patient * patient = findPatient(plist, name);
     int i = patient->disease_count;
     if(patient == NULL || i == 0) {
         printError(); return;
