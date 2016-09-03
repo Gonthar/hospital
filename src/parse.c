@@ -17,6 +17,27 @@ static const char * types[] = {
         "DELETE_PATIENT_DATA",
         "INVALID_COMMAND"
 };
+char * readLine2(){
+    size_t length = 0;
+    size_t bufferSize = MAX_LINE_SIZE + 2;
+    char * buffer = malloc(sizeof(char) * bufferSize);
+
+    int c;
+
+    while (EOF != (c = fgetc(stdin)) && c != '\n') {
+        if (length == bufferSize) {
+            continue;
+        }
+        buffer[length++] = (char)c;
+    }
+    if(c == EOF){
+        return NULL;
+    }
+
+    buffer[length++] = '\0';
+    return (char *) realloc(buffer, sizeof(char) * length);
+}
+
 
 char * readLine(){
     char * line = malloc(100 * sizeof(char));
@@ -32,7 +53,7 @@ char * readLine(){
     for(;;){
         c = fgetc(stdin);
         if(c == EOF){
-            //free(line);
+            free(line);
             return NULL;
         }
 
@@ -64,6 +85,7 @@ enum CommandType determineCommandType(char * line){
             return ((enum CommandType) i);
         }
     }
+    free(line);
     return ((enum CommandType) NUM_OF_VALID_COMMANDS); //invalid command
 }
 
@@ -113,6 +135,7 @@ Command * parseCommand(char * line){
         case INVALID_COMMAND: printError(); break;
         default: printError(); assert(NULL);
     }
+    free(line);
     return command;
 }
 
@@ -121,7 +144,5 @@ Command * fetchCommand(){
     if(line == NULL){
         return NULL;
     }
-    Command * command = parseCommand(line);
-    //free(line);
-    return command;
+    return parseCommand(line);
 }

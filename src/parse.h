@@ -5,7 +5,7 @@
 #ifndef HOSPITAL_PARSE_H
 #define HOSPITAL_PARSE_H
 
-#define MAX_LINE_SIZE 100000
+#define MAX_LINE_SIZE 1000
 #define NUM_OF_VALID_COMMANDS 5
 
 typedef enum CommandType{
@@ -25,5 +25,7 @@ typedef struct Command{
 }Command;
 
 Command * fetchCommand();
+char * readLine();
+Command * parseCommand(char * line);
 
 #endif //HOSPITAL_PARSE_H

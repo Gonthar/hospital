@@ -11,49 +11,65 @@
 
 DiseaseList* initialiseDiseaseList(){
     DiseaseList* list = malloc(sizeof(DiseaseList));
-    list->first = calloc(1, sizeof(Disease));
+    list->first = malloc(sizeof(Disease));
+    list->first->prev = NULL;
+    list->first->next = NULL;
+    list->first->value = NULL;
     list->last = list->first;
     list->size = 0;
     return list;
 }
 
-PatientList* initialisePatientList(){
+PatientList* initialisePatientList(){ //first patient NULL initializes
     PatientList* list = malloc(sizeof(PatientList));
-    list->first = calloc(1, sizeof(Patient));
-    list->first->history = calloc(1, sizeof(PatientHistory));
+    list->first = malloc(sizeof(Patient));
+    list->first->prev = NULL;
+    list->first->next = NULL;
+    list->first->history = NULL;
     list->last = list->first;
     list->size = 0;
     return list;
 }
 
 void freeDiseaseList(DiseaseList * list){
-    Disease * tbfreed = list->first;
-    while(list->first->next != NULL){
-        tbfreed = list->first;
-        list->first = list->first->next;
+    Disease * tbfreed = list->last;
+    while(list->last->prev != NULL){
+        tbfreed = list->last;
+        list->last = list->last->prev;
+        free(tbfreed->value);
         free(tbfreed);
     }
-    free(list->first);
+    free(list->last); //dummy
     free(list);
 }
 
-void freePatientList(PatientList * list){
-    Patient * patient = list->first;
+void freePatient(Patient * patient){
     PatientHistory * history = patient->history;
-    while(list->first->next != NULL){
-        patient = list->first;
-        history = patient->history;
-        list->first = list->first->next;
-        free(history);
-        free(patient);
+    PatientHistory * tbdeleted;
+    while(history != NULL){
+        tbdeleted = history;
+        history = history->prev;
+        free(tbdeleted);
     }
-    free(list->first);
+    free(patient->name);
+    free(patient);
+}
+
+void freePatientList(PatientList * list){
+    Patient * patient = list->last;
+    while(list->last->prev != NULL){
+        patient = list->last;
+        list->last = list->last->prev;
+        freePatient(patient);
+    }
+    free(list->last); //dummy
     free(list);
 }
 
 Disease * addNewDisease(DiseaseList * list, char* description){
-    Disease* disease = calloc(1, sizeof(Disease));
-    disease->value = description;
+    Disease * disease = malloc(sizeof(Disease));
+    disease->value = malloc((strlen(description) + 1) * (sizeof(char)));
+    strcpy(disease->value, description);
     disease->next = NULL;
     disease->prev = list->last;
     disease->reference_counter = 0;
@@ -64,10 +80,10 @@ Disease * addNewDisease(DiseaseList * list, char* description){
 }
 
 Patient * addNewPatient(PatientList* list, char* name, Disease* disease){
-    Patient* patient = malloc(sizeof(Patient));
+    Patient * patient = malloc(sizeof(Patient));
     patient->history = malloc(sizeof(PatientHistory));
-
-    patient->name = name;
+    patient->name = malloc((strlen(name) + 1) * (sizeof(char)));
+    strcpy(patient->name, name);
     patient->history->disease = disease;
     patient->history->prev = NULL;
     patient->disease_count = 1;
@@ -117,7 +133,7 @@ void addDiseaseToHistory(Patient * patient, Disease * disease){
     disease->reference_counter++;
 }
 
-void updateRefCounter(Disease* disease){
+void updateRefCounter(Disease * disease){
     disease->reference_counter--;
     if(disease->reference_counter == 0){
         disease->prev->next = disease->next;
@@ -150,9 +166,9 @@ void newDiseaseCopyDescription(char* name1, char* name2, PatientList * plist){
     if(patient2 == NULL) {
         printError(); return;
     }
-    Disease* disease = patient2->history->disease;
+    Disease * disease = patient2->history->disease;
 
-    Patient* patient1 = findPatient(plist, name1);
+    Patient * patient1 = findPatient(plist, name1);
     if(patient1 == NULL) {
         addNewPatient(plist, name1, disease);
     }else{
@@ -183,7 +199,7 @@ void printDescription(char* name, char* n, PatientList * plist){
     if(patient == NULL) {
         printError(); return;
     }else{
-        PatientHistory* history = findDisease(patient, n);
+        PatientHistory * history = findDisease(patient, n);
         if(history == NULL){
             printError(); return;
         }else{
@@ -198,8 +214,8 @@ void deletePatientData(char* name, PatientList * plist){
     if(patient == NULL || i == 0) {
         printError(); return;
     }else{
-        PatientHistory* history = patient->history;
-        PatientHistory* tbdeleted;
+        PatientHistory * history = patient->history;
+        PatientHistory * tbdeleted;
         while(i > 0){
             tbdeleted = history;
             history = history->prev;

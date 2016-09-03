@@ -28,24 +28,34 @@ int main(int argc, char *argv[]){
     while(command != NULL){
         switch(command->type){
             case NEW_DISEASE_ENTER_DESCRIPTION: {
-                newDiseaseEnterDescription(command->arg1, command->arg2, dlist, plist); break;
+                newDiseaseEnterDescription(command->arg1, command->arg2, dlist, plist);
+                break;
             }
             case NEW_DISEASE_COPY_DESCRIPTION: {
-                newDiseaseCopyDescription(command->arg1, command->arg2, plist); break;
+                //newDiseaseCopyDescription(command->arg1, command->arg2, plist);
+                break;
             }
             case CHANGE_DESCRIPTION: {
-                changeDescription(command->arg1, command->arg2, command->arg3, dlist, plist); break;
+                //changeDescription(command->arg1, command->arg2, command->arg3, dlist, plist);
+                break;
             }
             case PRINT_DESCRIPTION: {
-                printDescription(command->arg1, command->arg2, plist); break;
+                //printDescription(command->arg1, command->arg2, plist);
+                break;
             }
             case DELETE_PATIENT_DATA: {
-                deletePatientData(command->arg1, plist); break;
+                //deletePatientData(command->arg1, plist);
+                break;
             }
-            case INVALID_COMMAND: printError(); break;
-            default: printError(); assert(NULL);
+            case INVALID_COMMAND: {
+                printError();
+                break;
+            }
+            default: {
+                assert(NULL);
+            }
         }
-        //free(command);
+        free(command);
         if(argc > 0){
             if(strcmp(argv[0], "-v") == 0){
                 fprintf(stderr, "DESCRIPTIONS: %d", dlist->size);
@@ -53,9 +63,8 @@ int main(int argc, char *argv[]){
         }
         //printf("COMMAND %s ARG2: %s ARG3(if appl): %s\n", command->arg1, command->arg2, command->arg3);
         command = fetchCommand();
-        // TODO double linked list corrupted + free() & valgrind
     }
-    freeDiseaseList(dlist);
     freePatientList(plist);
+    freeDiseaseList(dlist);
     return 0;
 };
